@@ -1,20 +1,16 @@
 import React from 'react';
 
-const track = {
-  name: 'Tiny Dancer',
-  artist: "Elton John",
-  album: 'Madman Across The Water'
-}
 
 class Track extends React.Component {
   constructor(props) {
-    super(props) {
+    super(props);
       this.addTrack = this.addTrack.bind(this);
       this.removeTrack = this.removeTrack.bind(this);
-    }
+
   }
 
   renderAction() {
+    let isRemoval = true;
     if (isRemoval) {
       return <a onClick={this.removeTrack} className="Track-action">-</a>
     } else {
@@ -23,7 +19,7 @@ class Track extends React.Component {
   }
 
   addTrack() {
-    this.props.onAdd(this.props.track}
+    this.props.onAdd(this.props.track)
   }
 
   removeTrack() {
