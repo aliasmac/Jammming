@@ -28,7 +28,7 @@ const Spotify = {
 
 
    search(term) {
-     let accessToken;
+     const accessToken = Spotify.getAccessToken();
 
      return fetch(`https://api.spotify.com/v1/search?type=track&q=${term}`,
        {headers:
@@ -39,7 +39,7 @@ const Spotify = {
          if(!jsonResponse.tracks) {
            return [];
          }
-           return jsonResponse.track.map(track => ({
+           return jsonResponse.tracks.items.map(track => ({
               id: track.id,
               Name: track.name,
               Artist: track.artists[0].name,
