@@ -1,6 +1,8 @@
-const apiKey = '';
+// Do i need to import app.js for the savlist method to recognise trackuris?
+
 const clientID = '3ab4ac718014460f9d10c8eba2c256fb';
 const redirectURI = "http://localhost:3000/";
+let accessToken;
 
 const Spotify = {
 
@@ -8,41 +10,50 @@ const Spotify = {
     if (accessToken) {
       return accessToken;
     }
-    const accessTokenValue = windows.location.href.match(/access_token=([^&]*)/);
-    const expirationTime = windows.location.href.match(/expires_in=([^&]*)/);
-    if (accessTokenValue && expirationTime) {
+
+    const accessTokenMatch = windows.location.href.match(/access_token=([^&]*)/);
+    const expiresInMatch = windows.location.href.match(/expires_in=([^&]*)/);
+    if (accessTokenMatch && expiresInMatch) {
       accessToken = accessTokenValue[1];
+      const expiresIn = Number(expiresInMatch[1]);
       return accessToken;
       window.setTimeout(() => accessToken = '', expiresIn * 1000);
       window.history.pushState('Access Token', null, '/');
+      return accessToken;
     } else {
       const accessUrl = `https://accounts.spotify.com/authorize?client_id=${clientID}&response_type=token&scope=playlist-modify-public&redirect_uri=${redirectURI}`
       window.location = accessUrl;
     }
 
    search(term) {
+     const accessToken = spotify.getAccessToken();
+
      return fetch(`https://api.spotify.com/v1/search?type=track&q=${term}`,
        {headers:
          {Authorization: `Bearer ${accessToken}`}
        }).then(response => {
          return response.json();
-       }).then(jsonResponse => {
+       }).then(!jsonResponse.tracks) {
+         return [];
+       }
          return jsonResponse.track.map(track => ({
             id: track.id,
             Name: track.name,
             Artist: track.artists[0].name,
             Album: track.album.name,
             uri: track.uri,
-         }))
-       })
+         }));
+       });
    }
 
-   savePlaylist(name, s[]) {
-     if(!name && !track.uri) {
+   savePlaylist(name, trackUris) {
+     if(!name || !track.uri) {
+       return;
      };
-     let accessToken = getAccessToken();
-     let headers = {Authorization: `Bearer ${accessToken}`};
-     let userID = '';
+
+     const accessToken = spotify.getAccessToken();
+     const headers = {Authorization: `Bearer ${accessToken}`};
+     let userID;
 
      return fetch('https://api.spotify.com/v1/me', {headers: headers}
          ).then(response => response.json()
@@ -62,10 +73,8 @@ const Spotify = {
              });
            });
          });
-
-
-
+       }
 // end of spotify module
-}
+  }
 
 export default Spotify;
