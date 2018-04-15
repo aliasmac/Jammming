@@ -19,7 +19,7 @@ class SearchBar extends React.Component {
   }
 
   handleEnter() {
-    this.search;
+    this.search();
   }
 
   render() {
